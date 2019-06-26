@@ -1,6 +1,6 @@
 const style = (on, hit) => {
   return {
-    backgroundColor: hit ? (on ? "#e8ffe8" : "#c9ffcb") : "white",
+    backgroundColor: hit ? (on ? "#fff9c9" : "#c9ffcb") : "white",
     border: "2px solid " + (on ? "black" : "grey"),
     margin: ".5rem",
     height: "3rem"

@@ -16,14 +16,14 @@ const Index = () => (
     </section>
     <section className="section">
       <div className="container">
-        <iframe
+        {/* <iframe
           width="560"
           height="315"
           src="https://www.youtube.com/embed/NbX9sLAtnhw"
-          frameborder="0"
+          frameBorder="0"
           allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        />
+          allowFullScreen
+        /> */}
       </div>
     </section>
     <section className="section">
