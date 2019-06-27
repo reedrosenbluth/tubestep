@@ -25,7 +25,7 @@ class Sequence extends React.Component {
 
   componentDidMount() {
     var keys = new Tone.Players(this.drums, {
-      volume: -10,
+      volume: 0,
       fadeOut: "64n"
     }).toMaster();
 
@@ -104,7 +104,10 @@ class Sequence extends React.Component {
       <div>
         <div className="columns">
           <div className="column is-1">
-            <button className="button" onClick={() => this.toggleClock()}>
+            <button
+              className="button is-black"
+              onClick={() => this.toggleClock()}
+            >
               start/stop
             </button>
           </div>
@@ -117,6 +120,26 @@ class Sequence extends React.Component {
             />
           </div>
         </div>
+
+        <div className="columns">
+          {_.times(LENGTH, i => {
+            return (
+              <div className="column" key={i}>
+                <div
+                  style={{
+                    height: "0.6rem",
+                    margin: "0 1.6rem",
+                    borderRadius: "50%",
+                    border: ".5px solid #3a3a3a",
+                    backgroundColor:
+                      this.state.step == i + 1 ? "grey" : "#232323"
+                  }}
+                />
+              </div>
+            );
+          })}
+        </div>
+
         {this.state.sequence.map((track, i) => {
           return (
             <Track

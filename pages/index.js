@@ -8,6 +8,25 @@ const Index = () => (
       <title>tubestep</title>
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
     </Head>
+    <style jsx global>{`
+      html {
+        background: #151515;
+      }
+
+      body {
+        color: white;
+      }
+
+      .title {
+        color: white;
+      }
+
+      input.input {
+        background-color: black;
+        border: none;
+        color: white;
+      }
+    `}</style>
 
     <section className="section">
       <div className="container">
@@ -26,7 +45,14 @@ const Index = () => (
         /> */}
       </div>
     </section>
-    <section className="section">
+    <section
+      className="section"
+      style={{
+        backgroundColor: "#272727",
+        border: "2px solid #333",
+        margin: "1rem"
+      }}
+    >
       <div className="container">
         <Sequence />
       </div>
