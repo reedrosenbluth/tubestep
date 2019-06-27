@@ -1,38 +1,39 @@
 import Track from "../components/Track";
 import Tone from "tone";
+import _ from "lodash";
+
+const LENGTH = 16;
 
 class Sequence extends React.Component {
   constructor(props) {
     super(props);
+    this.drums = {
+      kick: "../static/808kick.wav",
+      hat: "../static/hat.wav",
+      snare: "../static/snare.wav",
+      rimshot: "../static/rimshot.wav"
+    };
+
+    const emptySequence = _.fill(Array(4), _.fill(Array(LENGTH), false));
     this.state = {
       step: 0,
       tempo: 120,
       clockOn: false,
-      sequence: [
-        [false, false, false, false, false, false, false, false],
-        [false, false, false, false, false, false, false, false],
-        [false, false, false, false, false, false, false, false],
-        [false, false, false, false, false, false, false, false]
-      ]
+      sequence: emptySequence
     };
   }
 
   componentDidMount() {
-    var keys = new Tone.Players(
-      {
-        kick: "../static/808kick.wav"
-      },
-      {
-        volume: -10,
-        fadeOut: "64n"
-      }
-    ).toMaster();
+    var keys = new Tone.Players(this.drums, {
+      volume: -10,
+      fadeOut: "64n"
+    }).toMaster();
 
     var loop = new Tone.Sequence(
       (time, step) => {
-        this.state.sequence.forEach(track => {
+        this.state.sequence.forEach((track, i) => {
           if (track[step]) {
-            keys.get("kick").start(time, 0, "32n", 0, 1);
+            keys.get(Object.keys(this.drums)[i]).start(time, 0, "32n", 0, 1);
           }
         });
 
@@ -40,8 +41,8 @@ class Sequence extends React.Component {
           this.step();
         }, time);
       },
-      [0, 1, 2, 3, 4, 5, 6, 7],
-      "8n"
+      _.range(LENGTH),
+      LENGTH.toString() + "n"
     ).start(0);
 
     Tone.Transport.on("stop", () => {
@@ -60,7 +61,7 @@ class Sequence extends React.Component {
 
   step() {
     const cur = this.state.step;
-    const next = cur == 8 ? 1 : cur + 1;
+    const next = cur == LENGTH ? 1 : cur + 1;
     this.setState({
       step: next
     });
@@ -68,7 +69,7 @@ class Sequence extends React.Component {
 
   toggleCell(x) {
     return y => {
-      let sequence = this.state.sequence;
+      let sequence = _.map(this.state.sequence, _.clone);
       sequence[x][y] = !sequence[x][y];
       this.setState({
         sequence: sequence
