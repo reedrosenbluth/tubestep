@@ -55,16 +55,16 @@ class Sequence extends React.Component {
     });
   }
 
-  componentWillUnmount() {
-    clearInterval(this.stepID);
-  }
-
   step() {
     const cur = this.state.step;
     const next = cur == LENGTH ? 1 : cur + 1;
     this.setState({
       step: next
     });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.stepID);
   }
 
   toggleCell(x) {
