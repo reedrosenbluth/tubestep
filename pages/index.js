@@ -1,4 +1,4 @@
-import "../styles/styles.sass";
+import "../styles/bulma.min.css";
 import Head from "next/head";
 import Sequence from "../components/Sequence";
 import * as http from "superagent";

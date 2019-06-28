@@ -1,4 +1,8 @@
 {
   "version": 2,
-  "builds": [{ "src": "server/app.js", "use": "@now/node-server" }]
+  "builds": [
+    { "src": "next.config.js", "use": "@now/next" },
+    { "src": "/api/app.js", "use": "@now/node" }
+  ],
+  "routes": [{ "src": "/song", "dest": "/api/app.js" }]
 }
