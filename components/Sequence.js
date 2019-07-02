@@ -1,4 +1,4 @@
-import Track from "../components/Track";
+import Track from "./Track";
 import Tone from "tone";
 import _ from "lodash";
 
