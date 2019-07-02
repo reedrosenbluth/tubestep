@@ -1,0 +1,23 @@
+html {
+  background: #151515;
+}
+
+body {
+  color: white;
+}
+
+.title {
+  color: white;
+}
+
+input.input {
+  background-color: black;
+  border: none;
+  color: white;
+}
+
+.sequence {
+  background-color: "#272727";
+  border: "2px solid #333";
+  margin: "1rem";
+}
