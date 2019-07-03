@@ -19,7 +19,8 @@ class Sequence extends React.Component {
       step: 0,
       tempo: 120,
       clockOn: false,
-      sequence: emptySequence
+      sequence: emptySequence,
+      sounds: Object.keys(this.drums)
     };
   }
 
@@ -33,7 +34,7 @@ class Sequence extends React.Component {
       (time, step) => {
         this.state.sequence.forEach((track, i) => {
           if (track[step]) {
-            keys.get(Object.keys(this.drums)[i]).start(time, 0, "32n", 0, 1);
+            keys.get(this.state.sounds[i]).start(time, 0, "32n", 0, 1);
           }
         });
 
@@ -122,32 +123,62 @@ class Sequence extends React.Component {
         </div>
 
         <div className="columns">
-          {_.times(LENGTH, i => {
-            return (
-              <div className="column" key={i}>
-                <div
-                  style={{
-                    height: "0.6rem",
-                    margin: "0 1.6rem",
-                    borderRadius: "50%",
-                    border: ".5px solid #3a3a3a",
-                    backgroundColor:
-                      this.state.step == i + 1 ? "grey" : "#232323"
-                  }}
-                />
-              </div>
-            );
-          })}
+          <div className="column is-1" />
+          <div className="column">
+            <div className="columns">
+              {_.times(LENGTH, i => {
+                return (
+                  <div className="column" key={i}>
+                    <div
+                      className="indicator"
+                      style={{
+                        backgroundColor:
+                          this.state.step == i + 1 ? "grey" : "#232323"
+                      }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
         {this.state.sequence.map((track, i) => {
           return (
-            <Track
-              key={i}
-              step={this.state.step}
-              toggle={this.toggleCell(i)}
-              sequence={track}
-            />
+            <div className="columns">
+              <div className="column is-1 sound-select">
+                <div className="field">
+                  <div className="control">
+                    <div className="select is-small">
+                      <select
+                        className="is-black"
+                        value={this.state.sounds[i]}
+                        onChange={event => {
+                          let clone = _.clone(this.state.sounds);
+                          clone[i] = event.target.value;
+                          this.setState({
+                            sounds: clone
+                          });
+                        }}
+                      >
+                        {Object.keys(this.drums).map(drum => (
+                          <option>{drum}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="column">
+                <Track
+                  key={i}
+                  step={this.state.step}
+                  toggle={this.toggleCell(i)}
+                  sequence={track}
+                />
+              </div>
+            </div>
           );
         })}
       </div>
