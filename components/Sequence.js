@@ -11,7 +11,10 @@ class Sequence extends React.Component {
       kick: "../static/808kick.wav",
       hat: "../static/hat.wav",
       snare: "../static/snare.wav",
-      rimshot: "../static/rimshot.wav"
+      rimshot: "../static/rimshot.wav",
+      "soft kick": "../static/kick_soft.wav",
+      "heavy kick": "../static/kick_heavy.wav",
+      bongo: "../static/bongo.wav"
     };
 
     const emptySequence = _.fill(Array(4), _.fill(Array(LENGTH), false));
@@ -20,11 +23,17 @@ class Sequence extends React.Component {
       tempo: 120,
       clockOn: false,
       sequence: emptySequence,
+      loader:
+        "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0",
       sounds: Object.keys(this.drums)
     };
   }
 
   componentDidMount() {
+    window.addEventListener("blur", () => {
+      Tone.Transport.stop();
+    });
+
     var keys = new Tone.Players(this.drums, {
       volume: 0,
       fadeOut: "64n"
@@ -73,7 +82,8 @@ class Sequence extends React.Component {
       let sequence = _.map(this.state.sequence, _.clone);
       sequence[x][y] = !sequence[x][y];
       this.setState({
-        sequence: sequence
+        sequence: sequence,
+        loader: this.toDseq(sequence)
       });
     };
   }
@@ -98,6 +108,37 @@ class Sequence extends React.Component {
     this.setState({
       tempo: parseInt(e.target.value)
     });
+  }
+
+  toDseq(sequence) {
+    let output = "";
+    sequence.forEach(track => {
+      output += track.map(hit => (hit ? "1" : "0")).join(" ") + "\n";
+    });
+    output = output.slice(0, -1);
+    return output;
+  }
+
+  fromDseq(input) {
+    const tracks = input
+      .replace(/\s/g, "")
+      .match(new RegExp(".{1," + LENGTH + "}", "g"));
+    console.log(tracks);
+    let seq = [];
+    tracks.forEach(track => {
+      let t = [];
+      for (var i = 0; i < track.length; i++) {
+        let c = track.charAt(i);
+        if (c === "1") {
+          t.push(true);
+        } else if (c === "0") {
+          t.push(false);
+        }
+      }
+
+      seq.push(t);
+    });
+    return seq;
   }
 
   render() {
@@ -181,6 +222,29 @@ class Sequence extends React.Component {
             </div>
           );
         })}
+
+        <br></br>
+        <h2>load/save</h2>
+        <form
+          onSubmit={event => {
+            event.preventDefault();
+            this.setState({ sequence: this.fromDseq(this.state.loader) });
+          }}
+        >
+          <textarea
+            style={{
+              width: "13rem",
+              height: "3.4rem",
+              fontFamily: "monospace",
+              resize: "none",
+              overflow: "hidden"
+            }}
+            value={this.state.loader}
+            onChange={event => this.setState({ loader: event.target.value })}
+          ></textarea>
+          <br></br>
+          <input type="submit" value="load" />
+        </form>
       </div>
     );
   }
